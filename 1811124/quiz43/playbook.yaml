@@ -1,0 +1,12 @@
+---
+- name: Installing Elastic Stack for ubuntu
+  hosts: ubuntu
+
+  roles: 
+    - ubuntu-monitor/elk
+
+- name: Installing Elastic Stack for centos
+  hosts: centos
+
+  roles:
+    - centos-monitor/elk
