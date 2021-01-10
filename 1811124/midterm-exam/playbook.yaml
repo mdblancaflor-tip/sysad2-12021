@@ -1,0 +1,26 @@
+---
+- name:
+  hosts: centos
+
+  tasks:
+    - name: Include config.yaml
+      include_vars: 
+        file: config.yaml
+
+- name: Install Monitoring service in ubuntu
+  hosts: ubuntu
+
+  roles: 
+    - ubuntu/elk
+    - ubuntu/gpi
+    - ubuntu/lamp
+
+- name: Install monitoring services in centos 
+  hosts: centos
+
+  roles: 
+    - centos/elk
+    - centos/nagios
+    - centos/gpi
+    - centos/lamp
+

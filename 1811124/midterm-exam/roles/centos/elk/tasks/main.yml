@@ -1,0 +1,95 @@
+---
+# tasks file for roles/centos/elk
+- name: Java Installing...
+  yum: 
+    name: java-1.8.0-openjdk
+    state: present
+
+- name: Adding gpg key
+  command: sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+- name: Adding Elasticsearch rpm repo
+  copy:
+    src: ~/sysad2-12021/1811124/midterm-exam/elasticsearch.repo
+    dest: /etc/yum.repos.d/
+
+- name: Centos Updating...
+  dnf:
+    update_cache: yes
+
+- name: Elasticsearch Installing...
+  dnf: 
+    name: elasticsearch
+    state: present
+
+- name: Adding network in elasticsearch
+  lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    regexp: '#network.host:'
+    line: 'network.host: localhost'
+
+- name: adding port in elasticsearch
+  lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    regexp: '#http.port: 9200'
+    line: 'http.port: 9200'
+
+- name: Service Starting...
+  service: 
+    name: elasticsearch
+    state: started
+    enabled: yes
+
+- name: Installing kibana
+  dnf: 
+    name: kibana
+    state: present
+
+- name: adding port in kibana
+  lineinfile:
+    path: /etc/kibana/kibana.yml
+    regexp: '#server.port: 5601'
+    line: 'server.port: 5601'
+
+- name: Adding network in kibana
+  lineinfile: 
+    path: /etc/kibana/kibana.yml
+    regexp: '#server.host: "localhost"'
+    line: 'server.host: "localhost"'
+
+- name: Adding elastic in kibana
+  lineinfile:
+    path: /etc/kibana/kibana.yml
+    regexp: '#elasticsearch.host: ["http://localhost:9200"]'
+    line: 'elasticsearch.host: ["http://localhost:9200"]'
+
+- name: Starting Service
+  service: 
+    name: kibana
+    state: started
+    enabled: yes
+
+- name: allow traffic port 5601
+  firewalld:
+    port: 5601/tcp
+    permanent: yes
+    state: enabled
+
+- name: Reload the service 
+  command: firewall-cmd --reload
+
+- name: Installing logstash
+  dnf: 
+    name: logstash
+    state: present
+
+- name: Configure logstash
+  copy: 
+    src: ~/sysad2-12021/1811124/midterm-exam/logstash.conf
+    dest: /etc/logstash/conf.d/
+
+- name: Starting service
+  service: 
+    name: logstash
+    state: started
+    enabled: yes
