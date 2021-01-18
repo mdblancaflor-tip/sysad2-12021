@@ -1,0 +1,11 @@
+---
+prelim_clone: https://github.com/mdblancaflor-tip/sysad2-12021.git
+ftp_user: ftpuser 
+ftp_pass: $5$B2I/ULhT9M$Qn68W1KuvYx2dExBBJLKqV4tcTBnP1C6VVI/vJi8tjA
+naguser1: nagios
+naguser2: apache2
+naggroup: nagiosxi
+username: mdblancaflor-tip
+nagadminpass: $5$IEsefjCnFwPUe$Wego6F7nqbZqqIDEoSGXhG2snTooFBkq355DPSUlkc1
+nagadmin: nagadmin
+nagpass: $1$q41hrDS$tKSOVbYwqMsmNZlJrLCZp/

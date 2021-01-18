@@ -1,0 +1,46 @@
+---
+# tasks file for roles/ubuntu/config-vsftpd
+- name: create FTPuser
+  become: yes
+  user:
+    name: '{{ ftp_user }}'
+    password: '{{ ftp_pass }}'
+    comment: "FTP User for final exam" 
+
+- name: Add DenyUser
+  become: yes
+  lineinfile: 
+    path: /etc/ssh/sshd_config
+    line: "DenyUsers ' {{ ftp_user }}'"
+  register: sshd_config
+
+- name: Creating FTP directory
+  become: yes
+  file: 
+    path: /home/Final-Exam/ftp
+    state: directory
+    owner: nobody
+    group: nogroup
+    mode: '0555'
+
+- name: Creating files for directory
+  become: yes 
+  file: 
+    path: /home/Final-Exam/files
+    state: directory
+    owner: '{{ ftp_user }}' 
+    group: '{{ ftp_user }}'
+
+- name: copy vsftpd.conf
+  become: yes
+  copy: 
+    src: vsftpd.conf
+    dest: /etc/vsftpd.conf
+  register: vsftpd_config
+
+- name: Restart the service vsftpd.conf
+  become: yes
+  service: 
+    name: vsftpd 
+    state: restarted
+  when: vsftpd_config.changed

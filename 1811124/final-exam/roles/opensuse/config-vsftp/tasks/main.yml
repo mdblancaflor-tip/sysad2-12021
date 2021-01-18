@@ -1,0 +1,44 @@
+---
+# tasks file for roles/opensuse/config-vsftpd
+- name: create ftpuser
+  become: yes 
+  user: 
+    name: '{{ ftp_user }}'
+    password: '{{ ftp_pass }}'
+    comment: "newftpuser" 
+
+- name: add DenyUsers
+  become: yes 
+  lineinfile: 
+    path: /etc/ssh/sshd_config
+    line: "DenyUSers {{ ftp_user }}"
+  register: sshd_config
+
+- name: creating ftp dir
+  become: yes 
+  file: 
+    path: /home/Final-exam/ftp
+    state: directory
+    owner: '{{ ftp_user }}'
+    mode: '0555'
+
+- name: creating files directory
+  become: yes 
+  file: 
+    path: /home/mdblancaflor-ftp/files
+    state: directory
+    owner: '{{ ftp_user }}'
+
+- name: Copy vsftpd.conf 
+  become: yes 
+  copy:
+    src: vsftpd.conf
+    dest: /etc/vsftpd.conf
+  register: vsftpd_config
+
+- name: restart the vsftpd.conf
+  become: yes 
+  service: 
+    name: vsftpd 
+    state: restarted 
+  when:  vsftpd_config.changed

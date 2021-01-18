@@ -1,0 +1,52 @@
+---
+- name: Include Config.yaml
+  hosts: all
+  tasks: 
+    - name: Include config.yaml
+      include_vars:
+        file: config.yaml
+
+- name: Change MOTD for Centos & OpenSuse Hosts
+  become: yes
+  hosts:
+    - centos
+    - opensuse
+  tasks:
+    - name: Modified MOTD
+      lineinfile:
+        path: /etc/motd
+        line: Ansible Managed by '{{username}}'
+
+- name: change MOTD for ubuntu
+  hosts: ubuntu
+  tasks: 
+    - name: Modified MOTD
+      become: yes
+      command: sh -c 'echo "Ansible Manage by {{ username }}" > /etc/motd'
+
+- name: pre-requisite to install in ubuntu
+  hosts: ubuntu
+  roles:
+    - ubuntu/prelim-clone
+    - ubuntu/install-vsftpd
+    - ubuntu/config-vsftpd
+    - ubuntu/install-nagios
+    - ubuntu/config-nagios
+
+- name: pre-requisite to install in centos
+  hosts: centos
+  roles: 
+    - centos/prelim-clone
+    - centos/install-vsftpd
+    - centos/config-vsftpd
+    - centos/install-nagios
+    - centos/config-nagios
+
+- name: Pre-requisites to install in opensuse
+  hosts: opensuse
+  roles:
+    - opensuse/prelim-clone
+    - opensuse/install-vsftp
+    - opensuse/config-vsftp
+    - opensuse/install-nagios
+    - opensuse/config-nagios
