@@ -1,5 +1,5 @@
 ---
-# tasks file for roles/ubuntu/config-nagios
+# tasks file for roles/debian/config-nagios
 - name: Creating virtual host dir 
   become: yes 
   file: 
@@ -61,8 +61,8 @@
 
 - name: htpasswd module installing...
   become: yes 
-  pip: 
-    name: passlib
+  apt: 
+    name: python-passlib
     state: latest
 
 - name: create nagiosadmin

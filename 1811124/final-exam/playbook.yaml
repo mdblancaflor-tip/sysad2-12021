@@ -17,21 +17,21 @@
         path: /etc/motd
         line: Ansible Managed by '{{username}}'
 
-- name: change MOTD for ubuntu
-  hosts: ubuntu
+- name: change MOTD for debian
+  hosts: debian
   tasks: 
     - name: Modified MOTD
       become: yes
       command: sh -c 'echo "Ansible Manage by {{ username }}" > /etc/motd'
 
-- name: pre-requisite to install in ubuntu
-  hosts: ubuntu
+- name: pre-requisite to install in debian
+  hosts: debian
   roles:
-    - ubuntu/prelim-clone
-    - ubuntu/install-vsftpd
-    - ubuntu/config-vsftpd
-    - ubuntu/install-nagios
-    - ubuntu/config-nagios
+    - debian/prelim-clone
+    - debian/install-vsftpd
+    - debian/config-vsftpd
+    - debian/install-nagios
+    - debian/config-nagios
 
 - name: pre-requisite to install in centos
   hosts: centos
